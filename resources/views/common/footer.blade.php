@@ -1,0 +1,1 @@
+ <script data-main="{{ asset('/js/app.js') }}" src="{{ asset('/js/lib/requirejs.min.js') }}"></script>

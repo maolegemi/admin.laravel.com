@@ -13,7 +13,8 @@ return [
     |
     */
 
-    'fetch' => PDO::FETCH_CLASS,
+    //'fetch' => PDO::FETCH_CLASS,
+    'fetch' => PDO::FETCH_ASSOC,
 
     /*
     |--------------------------------------------------------------------------
@@ -53,29 +54,37 @@ return [
         ],
 
         'mysql' => [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
-            'charset' => 'utf8',
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST', 'localhost'),
+            'database'  => env('DB_DATABASE', 'forge'),
+            'username'  => env('DB_USERNAME', 'forge'),
+            'password'  => env('DB_PASSWORD', ''),
+            'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
-            'prefix' => '',
-            'strict' => false,
-            'engine' => null,
+            'prefix'    => '',
+            'strict'    => false,
         ],
-
-        'pgsql' => [
-            'driver' => 'pgsql',
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'schema' => 'public',
+        'gstadmin' => [
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST_ADMIN', 'localhost'),
+            'database'  => env('DB_DATABASE_ADMIN', 'forge'),
+            'username'  => env('DB_USERNAME_ADMIN', 'forge'),
+            'password'  => env('DB_PASSWORD_ADMIN', ''),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
+        'dbcenter' => [
+            'driver'   => 'mysql',
+            'host'     => env('DB_HOST_DBCENTER', 'localhost'),
+            'database' => env('DB_DATABASE_DBCENTER', 'forge'),
+            'username' => env('DB_USERNAME_DBCENTER', 'forge'),
+            'password' => env('DB_PASSWORD_DBCENTER', ''),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
         ],
 
     ],
