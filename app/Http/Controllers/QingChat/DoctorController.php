@@ -6,13 +6,15 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Common\BasicController;
+use App\DataTables\QingChat\Doctor\Kpi;
+
 
 class DoctorController extends BasicController
 {
     //
-    public function getKpi(){
+    public function getKpi(Kpi $dd){
 
 
-    	return View('qingchat.doctor.kpi');
+    	return $dd->render('qingchat.doctor.kpi');
     }
 }

@@ -17,6 +17,7 @@ requirejs.config({
         datatables:'plugin/datatables/jquery.dataTables.min',
         moment: 'plugin/daterangepicker/moment',
         icheck: 'plugin/iCheck/icheck.min',
+        chartjs: 'plugin/chartjs/Chart.min',
         app: 'page',
     },
     map: {

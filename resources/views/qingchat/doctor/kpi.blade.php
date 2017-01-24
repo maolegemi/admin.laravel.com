@@ -1,6 +1,12 @@
 @extends('common.layout')
 @section('content')
-
+    <style>
+     .table,.table > thead > tr > th,.table >tbody > tr > td{
+      border-color:#ccc;
+      vertical-align:middle;
+      text-align: center;
+     }
+    </style>
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
@@ -17,14 +23,16 @@
           <h3 class="box-title">医生数据统计</h3>
         </div>
         <div class="box-body">
-          <form action="" method="get">
+          <form id="qingchat-doctor-kpi-form" action="" method="get">
            <div class="row">
             <div class="col-md-2">
              <label>快捷选择:</label>
               <div class="form-group">
                   <select class="form-control">
-                  <option>最近七天</option>
-                </select>
+                   <option>最近一周</option>
+                   <option>最近一个月</option>
+                   <option>最近半年</option>
+                  </select>
               </div>
             </div>
             <div class="col-md-2">
@@ -34,7 +42,7 @@
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input data='daterangepicker' class="form-control pull-right" name='booking_date' type="text">
+                  <input data='daterangepicker' class="form-control pull-right" name='Stat_Time' value="{{date('Y-m-d',strtotime('-2 week'))}} ~ {{date('Y-m-d')}}" type="text">
                 </div>
               </div>
              </div>
@@ -117,15 +125,16 @@
       <!-- /.box -->
        <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title">可视化展示</h3>
+           <h3 class="box-title">可视化展示</h3>
         </div>
         <div class="box-body">
          <div class="row">
           <div class="col-md-12">
-           <div style="width:100%;height:350px;background:#ddd;">
 
+          <div class="chart">
+                <canvas id="areaChart" style="height:300px"></canvas>
+          </div>
 
-           </div>
           </div>
          </div>
         </div>
@@ -140,7 +149,7 @@
           <button class="btn btn-default" type="button"><span class="fa fa-file-excel-o"></span>导出</button>
         </div>
         <div class="box-body">
-          <table class="table table-bordered table-hover" id="qingchat-doctor-kpi">
+          <table class="table table-bordered table-hover" id="qingchat-doctor-kpi-table">
                <thead>
                 <tr>
                  <th rowspan="2">日期</th>
