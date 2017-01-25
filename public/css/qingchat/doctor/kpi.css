@@ -1,0 +1,49 @@
+.pointBox {
+    background: none;
+    float: left;
+    width: 100%;
+    position: relative;
+}
+
+.pointBox .contentBox {
+    background: none;
+    display:none;
+    float: left;
+    position: absolute;
+    top: 36px;
+    width: 100%;
+    height: auto;
+    z-index: 2;
+}
+
+.pointBox .contentBox dl {
+    background: white;
+    float: left;
+    padding: 8px 2.5%;
+    width: 100%;
+    margin: 0px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.pointBox .contentBox dl dt {
+    position: relative;
+    background: none;
+    margin-top: 3px;
+    width: 100%;
+    height: auto;
+    line-height: 24px;
+    float: left;
+}
+
+.pointBox .contentBox dl dt label.title {
+    background: none;
+    width: 90%;
+    float: left;
+}
+
+.pointBox .contentBox dl dt div.select {
+    width: 10%;
+    float: right;
+    text-align: center;
+}

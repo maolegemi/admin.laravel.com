@@ -42,7 +42,7 @@
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input data='daterangepicker' class="form-control pull-right" name='Stat_Time' value="{{date('Y-m-d',strtotime('-2 week'))}} ~ {{date('Y-m-d')}}" type="text">
+                  <input class="form-control pull-right" name='Stat_Time' value="{{date('Y-m-d',strtotime('-1 month'))}} ~ {{date('Y-m-d')}}" type="text" onchange="kpiObj.search();">
                 </div>
               </div>
              </div>
@@ -125,14 +125,193 @@
       <!-- /.box -->
        <div class="box">
         <div class="box-header with-border">
-           <h3 class="box-title">可视化展示</h3>
+    
+        <div class="row">
+         <div class="col-md-2">
+         <div class="pointBox">
+          <button class="btn btn-default btn-sm btn-block" style="text-align:left;position:relative;">
+             请选择要查看的数据<span class="text-danger">[问诊量]</span>
+            <span class="caret text-right" style="position:absolute;right:2.5%;top:45%;"></span>
+          </button>
+          <div class="contentBox">
+             <dl>
+                <dt>
+                <label class="title" for="id_00_01">当日问诊医生量</label>
+                <div class="select">
+                <input id="id_00_01" class="flat-red" value="Doctor_Num" type="checkbox">
+                </div>
+                </dt>
+                <dt>
+                <label class="title" for="id_00_02">当日新增问诊医生量</label>
+                <div class="select">
+                <input id="id_00_02" class="flat-red" value="LeiJi_NewDoctorNum" type="checkbox">
+                </div>
+                </dt>
+                <dt>
+                <label class="title" for="id_00_03">累计问诊医生量</label>
+                <div class="select">
+                <input id="id_00_03" class="flat-red" value="LeiJi_DoctorNum" type="checkbox">
+                </div>
+                </dt>
+                <dt>
+                <label class="title" for="id_00_04">当天总问诊量</label>
+                <div class="select">
+                <input id="id_00_04" class="flat-red" value="Online_ChatNum" type="checkbox">
+                </div>
+                </dt>
+                <dt>
+                <label class="title" for="id_00_05">累计总问诊量</label>
+                <div class="select">
+                <input id="id_00_05" class="flat-red" value="LeiJi_ChatNum" type="checkbox">
+                </div>
+                </dt>
+             </dl>
+          </div>
+          </div>
+          <!--end .pointBox-->
+
+         </div>
+         <div class="col-md-2">
+         <div class="pointBox">
+          <button class="btn btn-default btn-sm btn-block" style="text-align:left;position:relative;">
+             请选择要查看的数据<span class="text-danger">[回复咨询量]</span>
+            <span class="caret text-right" style="position:absolute;right:2.5%;top:45%;"></span>
+          </button>
+          <div class="contentBox">
+             <dl>
+                <dt>
+                <label class="title" for="id_01_01">24H回复咨询量</label>
+                <div class="select">
+                <input id="id_01_01" class="flat-red" value="Online_AnswerNum" type="checkbox">
+                </div>
+                </dt>
+                <dt>
+                <label class="title" for="id_01_02">2小时回复咨询量</label>
+                <div class="select">
+                <input id="id_01_02" class="flat-red" value="TowHourAnswerNum" type="checkbox">
+                </div>
+                </dt>
+                <dt>
+                <label class="title" for="id_01_03">首次回复医生量</label>
+                <div class="select">
+                <input id="id_01_03" class="flat-red" value="First_AnswerDoctorNum" type="checkbox">
+                </div>
+                </dt>
+                <dt>
+                <label class="title" for="id_01_04">两周内有回复</label>
+                <div class="select">
+                <input id="id_01_04" class="flat-red" value="TwoWeek_AnswerDoctorNum" type="checkbox">
+                </div>
+                </dt>
+             </dl>
+          </div>
+          </div>
+          <!--end .pointBox-->  
+         </div>
+           
+         <div class="col-md-2">
+         <div class="pointBox">
+          <button class="btn btn-default btn-sm btn-block" style="text-align:left;position:relative;">
+             请选择要查看的数据<span class="text-danger">[转换量]</span>
+            <span class="caret text-right" style="position:absolute;right:2.5%;top:45%;"></span>
+          </button>
+          <div class="contentBox">
+             <dl>
+                <dt>
+                <label class="title" for="id_02_01">当日挂号粉丝转换量</label>
+                <div class="select">
+                <input id="id_02_01" class="flat-red" value="ChangeToFans_Num" type="checkbox">
+                </div>
+                </dt>
+                <dt>
+                <label class="title" for="id_02_02">当日问诊预约转化量</label>
+                <div class="select">
+                <input id="id_02_02" class="flat-red" value="ChatToApp_Num" type="checkbox">
+                </div>
+                </dt>
+                <dt>
+                <label class="title" for="id_02_03">累计问诊预约转化量</label>
+                <div class="select"><input id="id_02_03" value="LeiJi_AppNum" class="flat-red" type="checkbox"></div>
+                </dt>
+                <dt>
+                <label class="title" for="id_02_04">累计挂号粉丝转换量</label>
+                <div class="select"><input id="id_02_04" value="LeiJi_ToFansNum" class="flat-red" type="checkbox"></div>
+                </dt>
+             </dl>
+          </div>
+          </div>
+          <!--end .pointBox-->  
+         </div>
+        
+<!--         <div class="col-md-2">
+         <div class="pointBox">
+          <button class="btn btn-default btn-sm btn-block" style="text-align:left;position:relative;">
+             请选择要查看的数据<span class="text-danger">[累计量]</span>
+            <span class="caret text-right" style="position:absolute;right:2.5%;top:45%;"></span>
+          </button>
+          <div class="contentBox">
+             <dl>
+                <dt>
+                <label class="title" for="id_03_01">问诊医生量累计</label>
+                <div class="select"><input id="id_03_01" class="flat-red" type="checkbox"></div>
+                </dt>
+                <dt>
+                <label class="title" for="id_03_02">总问诊量累计</label>
+                <div class="select"><input id="id_03_02" class="flat-red" type="checkbox"></div>
+                </dt>
+                <dt>
+                <label class="title" for="id_03_03">累计问诊预约[转换量]</label>
+                <div class="select"><input id="id_03_03" class="flat-red" type="checkbox"></div>
+                </dt>
+                <dt>
+                <label class="title" for="id_03_04">累计挂号粉丝</label>
+                <div class="select"><input id="id_03_04" class="flat-red" type="checkbox"></div>
+                </dt>
+             </dl>
+          </div>
+          </div>
+         </div>
+
+         <div class="col-md-2">
+         <div class="pointBox">
+          <button class="btn btn-default btn-sm btn-block" style="text-align:left;position:relative;">
+             请选择要查看的数据<span class="text-danger">[新增量]</span>
+            <span class="caret text-right" style="position:absolute;right:2.5%;top:45%;"></span>
+          </button>
+          <div class="contentBox">
+             <dl>
+                <dt>
+                <label class="title" for="id_04_01">当日新增问诊医生量</label>
+                <div class="select"><input id="id_04_01" class="flat-red" type="checkbox"></div>
+                </dt>
+                <dt>
+                <label class="title" for="id_04_02">总问诊量</label>
+                <div class="select"><input id="id_04_02" class="flat-red" type="checkbox"></div>
+                </dt>
+                <dt>
+                <label class="title" for="id_04_03">24H回复咨询量</label>
+                <div class="select"><input id="id_04_03" class="flat-red" type="checkbox"></div>
+                </dt>
+                <dt>
+                <label class="title" for="id_04_04">2小时回复咨询量</label>
+                <div class="select"><input id="id_04_04" class="flat-red" type="checkbox"></div>
+                </dt>
+             </dl>
+          </div>
+          </div> 
+         </div>
+   -->
+        </div>
+        <!-- end row-->
+         
+
         </div>
         <div class="box-body">
          <div class="row">
           <div class="col-md-12">
-
+      
           <div class="chart">
-                <canvas id="areaChart" style="height:300px"></canvas>
+                <canvas id="areaChart" style="height:300px;"></canvas>
           </div>
 
           </div>
