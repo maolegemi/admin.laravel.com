@@ -18,6 +18,7 @@ requirejs.config({
         moment: 'plugin/daterangepicker/moment',
         icheck: 'plugin/iCheck/icheck.min',
         chartjs: 'plugin/chartjs/Chart.min',
+        echarts: 'plugin/echarts/echarts-all',
         app: 'page',
     },
     map: {
@@ -29,9 +30,11 @@ requirejs.config({
         underscore: { exports: "_" },
         AdminLTE:  { deps: ['bootstrap','css!plugin/AdminLTE/css/AdminLTE.min.css','css!plugin/AdminLTE/css/skins/_all-skins.min.css'] },
         slimScroll:{ deps: ['jquery'] },
+        chartjs:{ deps: ['jquery'] },
+        echarts:{ deps: ['jquery'] },
         select2:  { deps: ['jquery','css!plugin/select2/select2.min.css'] },
         bootstrap: { deps: ['jquery','css!plugin/bootstrap/css/bootstrap.min.css'] },
-        daterangepicker: { deps: ['jquery','css!plugin/daterangepicker/daterangepicker.css'] },
+        daterangepicker: { deps: ['moment','jquery','css!plugin/daterangepicker/daterangepicker.css'] },
         datatables: { deps: ['jquery','css!plugin/datatables/jquery.dataTables.min.css'] },
         icheck: { deps: ['AdminLTE','css!plugin/iCheck/all.css'] },
     }

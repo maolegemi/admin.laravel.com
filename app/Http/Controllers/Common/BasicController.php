@@ -3,50 +3,64 @@
 namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
-use DB;
+use App\Http\Models\Common\Cgi;
+use App\Http\Models\Common\Menu;
+use App\Http\Models\Common\Tool;
 use View;
 
 class BasicController extends Controller
 {
-    //
+    //获取左边菜单数据
     public function __construct()
     {
-        $menu = $this->getMenuList();
+        $model = new Menu();
+        $menu  = $model->getMenuList();
         View::share('menu', $menu);
     }
-
-    //
-    private function getMenuList()
+    //通过CGI获取城市数据
+    public static function getCityMap($do = 0, $province_no = 0)
     {
         $retArr = [];
-        //菜单路由
-        $permissions = DB::connection('gstadmin')->table('gst_data_permissions');
-        $rstArr      = $permissions->where('status', 1)->where('isshow',1)->orderBy('pid', 'asc')->orderBy('sort', 'asc')->get();
-        //dump($rstArr);
-        //dump($permissionData);
-        //角色
-        // $role = DB::connection('gstadmin')->table('gst_data_permission_role');
-        // $roleData = $role->where('status',1)->get();
-        //构造菜单数据
-        foreach ($rstArr as $k => $v) {
-            if ($v['name'] == '#' && $v['pid'] == 0) {
-                $retArr[$v['id']]['id']       = $v['id'];
-                $retArr[$v['id']]['name']     = $v['label'];
-                $retArr[$v['id']]['url']      = $v['name'];
-                $retArr[$v['id']]['css']      = $v['css'];
-                $retArr[$v['id']]['children'] = [];
-            } else {
-                if($v['name'] != 'welcome'){
-                $retArr[$v['pid']]['children'][$v['id']]['id']   = $v['id'];
-                $retArr[$v['pid']]['children'][$v['id']]['name'] = $v['label'];
-                //$retArr[$v['pid']]['children'][$v['id']]['url']  = $v['name'];
-                $retArr[$v['pid']]['children'][$v['id']]['url']  = ($v['name'] == 'operation.booking.detail') || ($v['name'] == 'traffic.traffic.trend') || ($v['name'] == 'qingchat.doctor.kpi')?$v['name']:'admin.admin.index';
-                }
-
-            }
-
-        }
-        //$model->belongsToMany(Role::class, 'gst_data_permission_role')->where('gst_data_permission_role.status', 1);
+        $cgi    = new Cgi();
+        $retArr = $cgi->getCityFromCgi($do, $province_no);
         return $retArr;
+    }
+    //通过CGI获取门店数据
+    public static function getShopMap($do = 0, $city_no = 0, $shop_no = 0)
+    {
+        $retArr = [];
+        $cgi    = new Cgi();
+        $retArr = $cgi->getShopFromCgi($do, $city_no, $shop_no);
+        return $retArr;
+    }
+    //通过CGI获取城市关联门店数据
+    public static function getCityShopMap($city_no = 0)
+    {
+        $retArr = [];
+        $cgi    = new Cgi();
+        $retArr = $cgi->getCityAndShopFromCgi($city_no);
+        return $retArr;
+    }
+    //获取渠道数据
+    public static function getSourceMap($type = 0)
+    {
+       $retArr = [];
+       $tools  = new Tool();
+       $retArr = $tools->getSource($type);
+       return $retArr;        
+    }
+    //获取支付方式数据
+    public function getPayModeMap(){
+       $retArr = [];
+       $tools  = new Tool();
+       $retArr = $tools->getPayMode();
+       return $retArr;   
+    }
+    //获取首复诊数据
+    public function getVisitStateMap(){
+       $retArr = [];
+       $tools  = new Tool();
+       $retArr = $tools->getVisitState();
+       return $retArr;   
     }
 }

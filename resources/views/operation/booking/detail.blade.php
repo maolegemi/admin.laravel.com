@@ -1,6 +1,6 @@
 @extends('common.layout')
 @section('content')
-
+    <link rel="stylesheet" href="{{ asset('/css/operation/booking/detail.css') }}">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
@@ -17,6 +17,7 @@
           <h3 class="box-title">订单预约明细</h3>
         </div>
         <div class="box-body">
+         <form id="booking-detail-form" method="get" action="">
           <div class="row">
              <div class="col-md-2">
              <div class="form-group">
@@ -25,7 +26,7 @@
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input data='daterangepicker' class="form-control pull-right" name='booking_date' type="text">
+                  <input data='daterangepicker' class="form-control pull-right" value="" name='booking_date' type="text">
                 </div>
               </div>
              </div>
@@ -36,24 +37,48 @@
                   <div class="input-group-addon">
                     <i class="fa fa-calendar-check-o"></i>
                   </div>
-                  <input data='daterangepicker' class="form-control pull-right" id="reservation" type="text">
+                  <input data='daterangepicker' class="form-control pull-right" id="reservation" value="{{date('Y-m-d',strtotime('-1 month'))}} ~ {{date('Y-m-d')}}" type="text">
                 </div>
               </div>
              </div>
              <div class="col-md-2">
               <div class="form-group">
                 <label>预约渠道</label>
-                <select class="form-control">
-                  <option>请选择渠道</option>
-                </select>
+                <div id="source" class="multiSelectBox">
+                  <input class="form-control" readonly placeholder="请选择渠道.." type="text">
+                  <div class="contentBox">
+                   <dl>
+                    @foreach($data['init']['source_map'] as $k=>$v)
+                      <dt>
+                      <label class="title" for="source_id_{{$k}}">{{$v}}</label>
+                      <div class="select">
+                      <input id="source_id_{{$k}}" class="flat-red" name="source_id" value="{{$k}}" type="checkbox">
+                      </div>
+                      </dt>
+                    @endforeach
+                   </dl>
+                </div>
+                </div>
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
                 <label>支付方式</label>
-                <select class="form-control">
-                  <option>请选择方式</option>
-                </select>
+                <div id="paymode" class="multiSelectBox">
+                  <input class="form-control" readonly placeholder="请选择支付方式.." type="text">
+                  <div class="contentBox">
+                   <dl>
+                    @foreach($data['init']['pay_mode_map'] as $k=>$v)
+                      <dt>
+                      <label class="title" for="paymode_id_{{$k}}">{{$v}}</label>
+                      <div class="select">
+                      <input id="paymode_id_{{$k}}" class="flat-red" name="paymode" value="{{$k}}" type="checkbox">
+                      </div>
+                      </dt>
+                    @endforeach
+                   </dl>
+                </div>
+                </div>
               </div>
             </div>
             <div class="col-md-2">
@@ -61,6 +86,9 @@
                 <label>首诊状态</label>
                 <select class="form-control">
                   <option>请选择状态</option>
+                  @foreach($data['init']['visit_state_map'] as $k=>$v)
+                  <option value="{{$k}}">{{$v}}</option>
+                  @endforeach
                 </select>
               </div>
             </div>
@@ -79,7 +107,10 @@
               <div class="form-group">
                 <label>城市选择</label>
                 <select class="form-control">
-                  <option>请选择城市</option>
+                 <option>请选择城市</option>
+                 @foreach($data['init']['city_shop_map'] as $k=>$v)
+                 <option value="{{$v['city_no']}}">{{$v['city_name']}}</option>
+                 @endforeach
                 </select>
               </div>
             </div>
@@ -88,6 +119,11 @@
                 <label>门店选择</label>
                 <select class="form-control">
                   <option>请选择门店</option>
+                  @foreach($data['init']['city_shop_map'] as $k=>$v)
+                   @foreach($v['shops'] as $kk=>$vv)
+                   <option value="{{$vv['shop_no']}}">{{$vv['shop_nick_name']}}</option>
+                   @endforeach
+                  @endforeach
                 </select>
               </div>
             </div>
@@ -118,12 +154,13 @@
                 <label>&nbsp;</label>
                 <div class="input-group">
                   <button class="btn btn-default" type="button"><span class="fa fa-search"></span>查询</button>
-                  <button class="btn btn-default" type="button"><span class="fa fa-undo"></span>重置</button>
+                  <button class="btn btn-default" type="button" onclick="orderObj.reset('#booking-detail-form');"><span class="fa fa-undo"></span>重置</button>
                   <button class="btn btn-default" type="button"><span class="fa fa-file-excel-o"></span>导出</button>
                 </div>
               </div>
              </div>
           </div>
+          </form>
           <!--end .row-->
         </div>
         <!-- /.box-body -->

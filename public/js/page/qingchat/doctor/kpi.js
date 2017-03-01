@@ -1,13 +1,31 @@
-define(['chartjs', 'datatables', 'css!../../../../css/qingchat/doctor/kpi.css'], function(chart, datatables, css) {
+define(['echarts', 'datatables'], function(_echarts, datatables) {
     return {
         init: function() {
                 kpiObj = {
                     table: '',
+                    quickSelect:function(obj){
+                      var value = $(obj).val();
+                        var timeRang = '';
+                        if (value == 'week') {
+                            timeRang = GetDateStr(-7) + " ~ " + GetDateStr(0);
+                            $('#qingchat-doctor-kpi-form input[name="Stat_Time"]').val(timeRang);
+                        }
+                        if (value == 'month') {
+                            timeRang = GetMonthStr(-1) + " ~ " + GetMonthStr(0);
+                            $('#qingchat-doctor-kpi-form input[name="Stat_Time"]').val(timeRang);
+                        }
+                        if (value == 'halfYear') {
+                            timeRang = GetMonthStr(-6) + " ~ " + GetMonthStr(0);
+                            $('#qingchat-doctor-kpi-form input[name="Stat_Time"]').val(timeRang);
+                        }
+                        if (this.table) {
+                            this.table.draw();
+                        }
+                    },
                     searchInit: function() {
                         setDateRange($("input[name='Stat_Time']"));
                     },
                     search: function() {
-                        //kpiObj[table].draw();
                         if (this.table) {
                             this.table.draw();
                         }
@@ -79,8 +97,9 @@ define(['chartjs', 'datatables', 'css!../../../../css/qingchat/doctor/kpi.css'],
                                 "fnDrawCallback": function(obj) {
                                     //kpiObj.data = obj.json.data;
                                     data = obj.json.data;
+                                    toMakeSummerData(data);
                                     //指标变换
-                                    pointSelect($("div.pointBox"), data);
+                                    pointSelect($("div.pointBox"), data.reverse());
                                 },
                             });
                         } //
@@ -88,29 +107,16 @@ define(['chartjs', 'datatables', 'css!../../../../css/qingchat/doctor/kpi.css'],
                 }; //end kpiObj
                 kpiObj.searchInit();
                 kpiObj.tableInit();
-
             } //end init
     } //end return
     //
     function setDateRange(obj) {
         obj.daterangepicker({
-            opens: 'center', //日期选择框的弹出位置
-            buttonClasses: ['btn btn-info'],
-            applyClass: 'btn-small btn-primary blue',
-            cancelClass: 'btn-small',
-            locale: {
-                format: "YYYY-MM-DD",
-                separator: " ~ ",
-                applyLabel: "确定",
-                cancelLabel: "取消",
-                fromLabel: "开始",
-                toLabel: "结束",
-                customRangeLabel: "自定义",
-                weekLabel: "W",
-                daysOfWeek: ["日", "一", "二", "三", "四", "五", "六"],
-                monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月 "],
-                firstDay: 1
-            }
+            opens: 'right',
+            separator: " ~ ",
+            format: "YYYY-MM-DD",
+        },function(){
+            kpiObj.search();
         });
     }
     //
@@ -119,124 +125,200 @@ define(['chartjs', 'datatables', 'css!../../../../css/qingchat/doctor/kpi.css'],
         var btn = $(obj).find('button');
         var box = btn.parent().find('div.contentBox');
         var input = box.find('input[type="checkbox"]');
-        var state = 2;
+        var state = false;
+        btn.unbind('click');
         btn.click(function(event) {
             var _box = $(this).parent().find('div.contentBox');
             var status = _box.css('display');
             if (status == 'block') {
-                state = state == 2 ? 2 : 1;
+                state = state == false ? false : true;
                 _box.hide();
             } else {
-                state = state == 1 ? 1 : 2;
+                state = state == true ? true : false;
                 _box.show();
             }
-            //  阻止事件冒泡
-            event.stopPropagation();
         });
-        //鼠标进入区域
-        box.mouseenter(function() {
-            state = 1;
+        //btn鼠标事件
+        btn.hover(function() {
+            state = true;
+        }, function() {
+            state = false;
         });
-        //鼠标离开区域
-        box.mouseleave(function() {
-            state = 2;
+        //box鼠标事件
+        box.hover(function() {
+            state = true;
+        }, function() {
+            state = false;
         });
+        //鼠标事件
         $(document).bind("click", function() {
-            if (state == 2) {
+            if (state == false) {
                 box.hide();
             }
         });
-        //初始化可视化线性图
-        var line = $("#areaChart").get(0).getContext("2d");
-        var labels = [];
-        var datasets = [];
+        //构造折线图数据
+        var _obj = document.getElementById('lineBox');
+        var clean = [];
+        clean['Stat_Time'] = { data: [] };
+        //初始化数据
         $.each(input, function(k, v) {
             var key = $(v).val();
-            var _label = $(v).parent().parent().parent().find('label').text();
-            var _pointColor = "rgba("+(10*k)+", "+(15*k)+", "+(20*k)+", 1)";
-            var _strokeColor = "rgba("+(10*k)+", "+(15*k)+", "+(20*k)+", 1)";;
-            datasets[key] = {
-                label: _label,
-                pointColor: _pointColor,
-                strokeColor: _strokeColor,
+            var label = $(v).parent().parent().parent().find('label').text();
+            clean[key] = {
+                label: label,
                 data: [],
             };
-            console.log(datasets[key]);
         });
-        $.each(data,function(k,v){
-            labels.push(v['Stat_Time']);
-            $.each(v,function(kk,vv){
-              if(datasets[kk]){
-               datasets[kk].data.push(vv);
-              }
+        $.each(data, function(k, v) {
+            $.each(v, function(kk, vv) {
+                clean[kk].data.push(vv);
             });
         });
-        //console.log(datasets['Doctor_Num']);
-        var clean = {
-            labels: labels,
-            datasets: [datasets['Doctor_Num'],datasets['Online_AnswerNum']]
-        };
-        makeLine(line, clean);
+        //默认显示数据,初始化数据
+        var _data = [];
+        _data['xAxis'] = clean['Stat_Time'].data;
+        _data['legend'] = [];
+        _data['series'] = [];
+        $.each(input, function(k, v) {
+            if ($(v).is(':checked')) {
+                var key = $(v).val();
+                var label = $(v).parent().parent().parent().find('label').text();
+                _data['legend'].push(label);
+                var series = {
+                    key: key,
+                    name: label,
+                    type: 'line',
+                    data: clean[key].data,
+                };
+                _data['series'].push(series);
+            }
+        });
+        toMakeLine(_obj, _data);
         //选中事件
         input.on('ifChecked', function(event) {
+            //判断选中项数是否大于2
+            var length = _data['legend'].length;
+            if (length > 1) {
+                _data['legend'].pop();
+                var last = _data['series'].pop();
+                $('input[value="' + last.key + '"]').iCheck('uncheck');
+            }
             var key = $(this).val();
-            console.log(key);
+            var label = $(this).parent().parent().parent().find('label').text();
+            _data['legend'].push(label);
+            var series = {
+                key: key,
+                name: label,
+                type: 'line',
+                data: clean[key].data,
+            };
+            _data['series'].push(series);
+            toMakeLine(_obj, _data);
+
         });
         //撤销选中事件
         input.on('ifUnchecked', function(event) {
-
-
+            var key = $(this).val();
+            var label = $(this).parent().parent().parent().find('label').text();
+            //
+            $.each(_data['legend'], function(k, v) {
+                if (v == label) {
+                    _data['legend'].splice(k, 1);
+                }
+            });
+            //
+            $.each(_data['series'], function(k, v) {
+                if (v != undefined && v.name == label) {
+                    _data['series'].splice(k, 1);
+                }
+            });
+            toMakeLine(_obj, _data);
         });
     }
-    //
-    function makeLine(areaChartCanvas, areaChartData) {
-        // This will get the first returned node in the jQuery collection.
-        var areaChart = new Chart(areaChartCanvas);
-        var areaChartOptions = {
-            //Boolean - If we should show the scale at all
-            showScale: true,
-            //Boolean - Whether grid lines are shown across the chart
-            scaleShowGridLines: true,
-            //String - Colour of the grid lines
-            scaleGridLineColor: "rgba(0,0,0,.05)",
-            //Number - Width of the grid lines
-            scaleGridLineWidth: 1,
-            //Boolean - Whether to show horizontal lines (except X axis)
-            scaleShowHorizontalLines: true,
-            //Boolean - Whether to show vertical lines (except Y axis)
-            scaleShowVerticalLines: true,
-            //Boolean - Whether the line is curved between points
-            bezierCurve: true,
-            //Number - Tension of the bezier curve between points
-            bezierCurveTension: 0.3,
-            //Boolean - Whether to show a dot for each point
-            pointDot: true,
-            //Number - Radius of each point dot in pixels
-            pointDotRadius: 4,
-            //Number - Pixel width of point dot stroke
-            pointDotStrokeWidth: 1,
-            //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
-            pointHitDetectionRadius: 20,
-            //Boolean - Whether to show a stroke for datasets
-            datasetStroke: true,
-            //Number - Pixel width of dataset stroke
-            datasetStrokeWidth: 2,
-            //Boolean - Whether to fill the dataset with a color
-            datasetFill: false,
-            //String - A legend template
-            legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
-            //Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
-            maintainAspectRatio: true,
-            //Boolean - whether to make the chart responsive to window resizing
-            responsive: true
+    //构造折线图表方法
+    function toMakeLine(obj, data) {
+        var myChart = echarts.init(obj);
+        myChart.showLoading({
+            text: '数据正在加载...',
+        });
+        var option = {
+            legend: {
+                show: true,
+                data: data['legend'],
+                selectedMode: false,
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            toolbox: {
+                show: false,
+                feature: {
+                    magicType: { type: ['line', 'bar'] },
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            xAxis: [{
+                type: 'category',
+                boundaryGap: false,
+                data: data['xAxis'],
+                // axisLabel: {
+                //     interval: 0,
+                //     rotate: 45, //倾斜度 -90 至 90 默认为0  
+                //     margin: 10,
+                // },
+            }],
+            yAxis: [{
+                type: 'value'
+            }],
+            series: data['series']
         };
-
-        //Create the line chart
-        areaChart.Line(areaChartData, areaChartOptions);
-
+        myChart.setOption(option);
+        window.addEventListener("resize", function() {
+            myChart.resize();
+        });
+        myChart.hideLoading();
     }
+    //
+    //构造累计总量数据图表
+    function toMakeSummerData(data) {
+        var keyArr = [
+            { 'id': 'Doctor_Num', 'total': 0, 'name': '当日问诊医生量(总)' },
+            { 'id': 'LeiJi_NewDoctorNum', 'total': 0, 'name': '当日新增问诊医生量(总)' },
+            { 'id': 'Online_ChatNum', 'total': 0, 'name': '当日总问诊量(总)' },
+            { 'id': 'Online_AnswerNum', 'total': 0, 'name': '24H回复咨询量(总)' },
+            { 'id': 'TowHourAnswerNum', 'total': 0, 'name': '2小时回复咨询量(总)' },
+            { 'id': 'First_AnswerDoctorNum', 'total': 0, 'name': '首次回复医生量(总)' },
+            { 'id': 'TwoWeek_AnswerDoctorNum', 'total': 0, 'name': '两周内有回复医生量(总)' },
+            { 'id': 'ChangeToFans_Num', 'total': 0, 'name': '当日挂号粉丝转换量(总)' },
+            { 'id': 'ChatToApp_Num', 'total': 0, 'name': '当日问诊预约转化量(总)' },
+        ];
 
-    function makeTable() {
-
+        var html = '';
+        $.each(keyArr, function(k, v) {
+            $.each(data, function(key, value) {
+                v['total'] += value[v['id']];
+            });
+            html += "<td><p>&nbsp;</p><p>" + v['name'] + "</p><p>" + v['total'] + "</p></td>";
+        });
+        $("#summaryBox table tbody").html(html);
+    }
+    //
+    function GetDateStr(day) {
+        var dd = new Date();
+        dd.setDate(dd.getDate() + day);
+        var y = dd.getFullYear();
+        var m = (dd.getMonth() + 1) < 10 ? "0" + (dd.getMonth() + 1) : (dd.getMonth() + 1);
+        var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate();
+        return y + "-" + m + "-" + d;
+    }
+    //
+    function GetMonthStr(month) {
+        var dd = new Date();
+        dd.setMonth(dd.getMonth() + month);
+        var y = dd.getFullYear();
+        var m = (dd.getMonth() + 1) < 10 ? "0" + (dd.getMonth() + 1) : (dd.getMonth() + 1);
+        var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate();
+        return y + "-" + m + "-" + d;
     }
 });

@@ -1,12 +1,6 @@
 @extends('common.layout')
 @section('content')
-    <style>
-     .table,.table > thead > tr > th,.table >tbody > tr > td{
-      border-color:#ccc;
-      vertical-align:middle;
-      text-align: center;
-     }
-    </style>
+    <link rel="stylesheet" href="{{ asset('/css/qingchat/doctor/kpi.css') }}">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
@@ -28,10 +22,10 @@
             <div class="col-md-2">
              <label>快捷选择:</label>
               <div class="form-group">
-                  <select class="form-control">
-                   <option>最近一周</option>
-                   <option>最近一个月</option>
-                   <option>最近半年</option>
+                  <select class="form-control" onchange="kpiObj.quickSelect(this);">
+                   <option value="week">最近一周</option>
+                   <option selected value="month">最近一个月</option>
+                   <option value="halfYear">最近半年</option>
                   </select>
               </div>
             </div>
@@ -42,7 +36,7 @@
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input class="form-control pull-right" name='Stat_Time' value="{{date('Y-m-d',strtotime('-1 month'))}} ~ {{date('Y-m-d')}}" type="text" onchange="kpiObj.search();">
+                  <input class="form-control pull-right" name='Stat_Time' value="{{date('Y-m-d',strtotime('-1 month'))}} ~ {{date('Y-m-d')}}" type="text" >
                 </div>
               </div>
              </div>
@@ -52,73 +46,13 @@
         <!-- /.box-body -->
         <div class="box-body">
          <div class="row">
-          <div class="col-md-2">
-          <div class="info-box">
-            <span class="info-box-icon"><i class="fa fa-commenting"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">当日问诊医生量(总)</span>
-              <span class="info-box-number">410</span>
-            </div>
-            <!-- /.info-box-content -->
+          <div class="col-md-12">
+             <div id="summaryBox" style="height:100px;">
+               <table class="table table-bordered table-hover"><tbody></tbody></table>
+             </div>
           </div>
-          <!-- /.info-box -->
-        </div>
-        <div class="col-md-2">
-          <div class="info-box">
-            <span class="info-box-icon"><i class="fa fa-commenting"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">当日新增问诊医生量(总)</span>
-              <span class="info-box-number">410</span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-        </div>
-        <div class="col-md-2">
-          <div class="info-box">
-            <span class="info-box-icon"><i class="fa fa-commenting"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">当日总问诊量(总)</span>
-              <span class="info-box-number">410</span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-        </div>
-        <div class="col-md-2">
-          <div class="info-box">
-            <span class="info-box-icon"><i class="fa fa-commenting"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">2小时回复咨询量(总)</span>
-              <span class="info-box-number">410</span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-        </div>
-        <div class="col-md-2">
-          <div class="info-box">
-            <span class="info-box-icon"><i class="fa fa-commenting"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">首次回复医生量(总)</span>
-              <span class="info-box-number">410</span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-        </div>
-        <div class="col-md-2">
-          <div class="info-box">
-            <span class="info-box-icon"><i class="fa fa-commenting"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">两周内有回复医生量(总)</span>
-              <span class="info-box-number">410</span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-        </div>
-        </div>
+         </div>
+        <!-- end .row-->
         </div>
         <!-- /.box-body-->
       </div>
@@ -138,7 +72,7 @@
                 <dt>
                 <label class="title" for="id_00_01">当日问诊医生量</label>
                 <div class="select">
-                <input id="id_00_01" class="flat-red" value="Doctor_Num" type="checkbox">
+                <input id="id_00_01" class="flat-red" checked value="Doctor_Num" type="checkbox">
                 </div>
                 </dt>
                 <dt>
@@ -156,7 +90,7 @@
                 <dt>
                 <label class="title" for="id_00_04">当天总问诊量</label>
                 <div class="select">
-                <input id="id_00_04" class="flat-red" value="Online_ChatNum" type="checkbox">
+                <input id="id_00_04" class="flat-red" checked  value="Online_ChatNum" type="checkbox">
                 </div>
                 </dt>
                 <dt>
@@ -169,7 +103,6 @@
           </div>
           </div>
           <!--end .pointBox-->
-
          </div>
          <div class="col-md-2">
          <div class="pointBox">
@@ -311,7 +244,7 @@
           <div class="col-md-12">
       
           <div class="chart">
-                <canvas id="areaChart" style="height:300px;"></canvas>
+                <div id="lineBox" style="width:100%;height:300px;"></div>
           </div>
 
           </div>

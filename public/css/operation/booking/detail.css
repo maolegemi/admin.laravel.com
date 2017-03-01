@@ -1,37 +1,34 @@
-.table,.table > thead > tr > th,.table >tbody > tr > td{
-      border-color:#ccc;
-      vertical-align:middle;
-      text-align: center;
-     }
-.pointBox {
+.multiSelectBox {
     background: none;
     float: left;
     width: 100%;
     position: relative;
 }
 
-.pointBox .contentBox {
-    background: none;
+.multiSelectBox .contentBox {
+    background: white;
     display:none;
     float: left;
     position: absolute;
     top: 36px;
     width: 100%;
     height: auto;
-    z-index: 2;
+    max-height:250px;
+    z-index: 1000;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 3px;
 }
 
-.pointBox .contentBox dl {
+.multiSelectBox .contentBox dl {
     background: white;
     float: left;
     padding: 8px 2.5%;
     width: 100%;
     margin: 0px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
 }
 
-.pointBox .contentBox dl dt {
+.multiSelectBox .contentBox dl dt {
     position: relative;
     background: none;
     margin-top: 3px;
@@ -41,13 +38,13 @@
     float: left;
 }
 
-.pointBox .contentBox dl dt label.title {
+.multiSelectBox .contentBox dl dt label.title {
     background: none;
     width: 90%;
     float: left;
 }
 
-.pointBox .contentBox dl dt div.select {
+.multiSelectBox .contentBox dl dt div.select {
     width: 10%;
     float: right;
     text-align: center;

@@ -3,6 +3,10 @@ define(['datatables'], function(datatables) {
         init: function() {
             orderObj = {
                 table: '',
+                searchInit: function() {
+                    multiSelect($("#source"));
+                    multiSelect($("#paymode"));
+                },
                 tableInit: function() {
                     this.table = $('#booking-daily-list').DataTable({
                         info: true,
@@ -19,7 +23,7 @@ define(['datatables'], function(datatables) {
                         ajax: {
                             url: "",
                             data: function(d) {
-                               
+
                             },
                         },
                         columns: [{
@@ -79,12 +83,56 @@ define(['datatables'], function(datatables) {
                             }] //,
                     });
                 },
+                reset:function(obj){
+                  $(obj)[0].reset();
+                },
                 export: function() {
                     //alert('export');
                 }
             };
+            orderObj.searchInit();
             orderObj.tableInit();
         }
+    }
+
+    //多选下拉框js
+    function multiSelect(obj) {
+        var input = obj.find("input[type='text']").eq(0);
+        var box   = obj.find('div.contentBox');
+        var state = true;
+        //点击事件
+        input.unbind('click');
+        input.click(function(event) {
+            var status = box.css('display');
+            if (status == 'block') {
+                state = state == true ? true : false;
+                box.hide();
+            } else {
+                state = state == false ? false : true;
+                box.show();
+            }
+        });
+        //input鼠标焦点事件
+        input.hover(function() {
+            state = true;
+        }, function() {
+            state = false;
+        });
+        //box鼠标焦点事件
+        box.hover(function() {
+            state = true;
+        }, function() {
+            state = false;
+        });
+        //鼠标点击事件
+        $(document).bind("click", function() {
+            if (state == false) {
+                box.hide();
+            }
+        });
+        //多选选中事件
+
+
     }
 
 });
