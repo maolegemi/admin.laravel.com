@@ -6,6 +6,7 @@ use League\Fractal\TransformerAbstract;
 
 class Detail extends TransformerAbstract
 {
+    use \App\Helper\Helper;
     // Load Common Function
     //use \App\Helper\Helper;
     // 格式化明细数据
@@ -13,19 +14,19 @@ class Detail extends TransformerAbstract
     {
         return [
             'OrderId'          => $data['OrderId'],
+            'OrderConfirmDate' => $data['OrderConfirmDate'],
+            'OrderVisitDate'   => $data['OrderVisitDate'],
+            'CityName'         => $this->cityName($data['CityId']),
+            'ShopName'         => $this->shopName($data['ShopId']),
+            'DoctorName'       => $this->cutStr($data['DoctorName'], 5),
             'PatientName'      => $data['PatientName'],
             'MobilePhone'      => $data['MobilePhone'],
-            'OrderVisitDate'   => $data['OrderVisitDate'],
-            'OrderStatus'      => $data['OrderStatus'],
-            'CityId'           => $data['CityId'],
-            'ShopId'           => $data['ShopId'],
-            'DoctorName'       => mb_strlen($data['DoctorName'])>8?mb_substr($data['DoctorName'],0,6,'utf-8').'...':$data['DoctorName'],
-            'OrderType'        => $data['OrderType'],
-            'SourceId'         => $data['SourceId'],
-            'PayStatus'        => $data['PayStatus'],
-            'PayType'          => $data['PayType'],
-            'FirstVisitFlag'   => $data['FirstVisitFlag']==1?'首诊':($data['FirstVisitFlag']==2?'复诊':'不详'),
-            'OrderConfirmDate' => $data['OrderConfirmDate'],
+            'OrderStatus'      => $this->orderState($data['OrderStatus']),
+            'OrderType'        => $this->orderType($data['OrderType']),
+            'SourceId'         => $this->sourceName($data['SourceId']),
+            'PayStatus'        => $data['PayStatus'] ? '已支付' : '未支付',
+            'PayType'          => $this->payMode($data['PayType']),
+            'FirstVisitFlag'   => $this->visitState($data['FirstVisitFlag']),
         ];
     }
 }

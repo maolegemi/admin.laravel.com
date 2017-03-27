@@ -1,4 +1,4 @@
-define(['domReady', 'app/common/common', 'app/common/base', 'underscore', 'bootstrap','AdminLTE'], function(domReady, common, base) {
+define(['domReady', 'app/common/common', 'app/common/base', 'underscore', 'bootstrap', 'AdminLTE','app/common/function'], function(domReady, common, base,score,boot,admin,fn) {
     var env, appMap, app;
     env = (window.location.host.indexOf('dev') !== -1 || window.location.search.indexOf('dev') !== -1) ? new base('dev') : new base('live');
 
@@ -9,36 +9,34 @@ define(['domReady', 'app/common/common', 'app/common/base', 'underscore', 'boots
         // 根据Url 动态加载需要的SAP
         appMap = {
             //运营>预约
-            'operation_booking': 'app/operation/booking/index',
+            'operation_booking_online': 'app/operation/booking/online',
             'operation_booking_detail': 'app/operation/booking/detail',
             //运营>医生
             'operation_doctor_kpi': 'app/operation/doctor/kpi',
             'operation_doctor_rank': 'app/operation/doctor/rank',
             //运营>门店
-            'operation_shop': 'app/operation/shop/index',
             'operation_shop_kpi': 'app/operation/shop/kpi',
+            'operation_shop_menage': 'app/operation/shop/menage',
             // 药品分析
-            'drug_drug_consume': 'app/drug/drug/consume',
             'drug_drug_purchase': 'app/drug/drug/purchase',
+            'drug_drug_consume': 'app/drug/drug/consume',
             // 扫码统计
-            'qrcode_d-shop': 'app/qrcode_shop',
-            'qrcode_d-doctor': 'app/qrcode_doctor',
-            'qrcode_d-city': 'app/qrcode_city',
-            //轻问诊统计 add by lzb
-            'qingchat_doctor_kpi':'app/qingchat/doctor/kpi',
-            'qingchat_qrcode_scan':'app/qingchat/qrcode/scan',
-            'fac_qing-chat-stat': 'app/qingchat_stat',
-            //医馆统计 add by lzb
-            'rep_income': 'app/rep_chart',
-            'rep_service': 'app/rep_chart',
-            'rep_operation': 'app/rep_chart',
-            'rep_patient': 'app/rep_chart',
+            'qrcode_qrcode_doctor': 'app/qrcode/doctor/scan',
+            'qrcode_qrcode_shop': 'app/qrcode/shop/scan',
+            'qrcode_qrcode_city': 'app/qrcode/city/scan',
+            //轻问诊
+            'qingchat_doctor_kpi': 'app/qingchat/doctor/kpi',
+            'qingchat_city_scan': 'app/qingchat/city/scan',
+            //医馆统计
+            'clinic_shop_operate': 'app/clinic/shop/operate',
+            'clinic_shop_patient': 'app/clinic/shop/patient',
+            'clinic_shop_report': 'app/clinic/shop/report',
             //医生数据
-            'doctor_charges': 'app/doctor_chart',
+            'doctor_doctor_kpi': 'app/doctor/doctor/kpi',
             'doctor_visit': 'app/doctor_visit',
             //流量分析'
             'traffic_traffic_trend': 'app/traffic/traffic/trend',
-            'traffic_source': 'app/traffic_source',
+            'traffic_traffic_source': 'app/traffic/traffic/source',
         };
         // 检查Url
         var url = document.location.pathname;

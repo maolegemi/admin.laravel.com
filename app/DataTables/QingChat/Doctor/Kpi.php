@@ -11,24 +11,25 @@ use Yajra\Datatables\Services\DataTable;
 
 class Kpi extends DataTable
 {
-    //use \App\DataTables\ExportFile;
+    use \App\DataTables\ExportFile;
     //
     public function ajax($export = false, $take = 1000, $time = false)
     {
         $retJson = '';
-        $_data   = $this->request()->all();
+        extract($this->request()->all());
         $obj     = $this->datatables->eloquent($this->query());
         // 格式化
-        if (isset($_data['action']) && in_array($_data['action'], ['print', 'excel'])) {
+        if (isset($action) && in_array($action, ['print', 'excel'])) {
             $obj->setTransformer('App\Helper\Export\QingChat\Doctor\Kpi');
         } else {
             $obj->setTransformer('App\Helper\Table\QingChat\Doctor\Kpi');
         }
         //构造查询条件
-        if (isset($_data['Stat_Time']) && $_data['Stat_Time']) {
-            $statTime = explode('~', $_data['Stat_Time']);
+        if (isset($Stat_Time) && $Stat_Time) {
+            $statTime = explode('~', $Stat_Time);
             $obj->whereBetween('Stat_Time', [trim($statTime[0]), trim($statTime[1])]);
         }
+        //export
         if ($export === true && $time === false) {
             return $obj->count();
         } elseif ($export === true) {
@@ -44,15 +45,6 @@ class Kpi extends DataTable
         $_model = new Basic();
         $model  = $_model->resetConnection('dbcenter')->resetTable('Rep_QinChatLeiJi_Day')->select($this->getColumns());
         return $this->applyScopes($model);
-    }
-    //
-    public function html()
-    {
-        return $this->builder()
-            ->columns($this->getColumns())
-            ->ajax('')
-            ->addAction(['width' => '80px'])
-            ->parameters($this->getBuilderParameters());
     }
     //
     private function getColumns()
@@ -83,7 +75,7 @@ class Kpi extends DataTable
     // Override parent function
     public function excel()
     {
-        $headers_map = config('export.fac.stat');
+        $headers_map = config('export.qingchat.doctor.kpi');
         $this->buildExcel($headers_map);
     }
 }

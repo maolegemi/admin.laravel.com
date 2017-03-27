@@ -10,53 +10,122 @@
 
     <!-- Main content -->
     <section class="content">
-      
-      <!-- Default box -->
-      <div class="box">
+        <div class="box">
         <div class="box-header with-border">
           <h3 class="box-title">医生数据统计</h3>
         </div>
         <div class="box-body">
-          <form id="qingchat-doctor-kpi-form" action="" method="get">
-           <div class="row">
-            <div class="col-md-2">
-             <label>快捷选择:</label>
-              <div class="form-group">
-                  <select class="form-control" onchange="kpiObj.quickSelect(this);">
-                   <option value="week">最近一周</option>
-                   <option selected value="month">最近一个月</option>
-                   <option value="halfYear">最近半年</option>
-                  </select>
-              </div>
-            </div>
-            <div class="col-md-2">
-             <div class="form-group">
-                <label>自定义时间:</label>
-                <div class="input-group">
-                  <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  <input class="form-control pull-right" name='Stat_Time' value="{{date('Y-m-d',strtotime('-1 month'))}} ~ {{date('Y-m-d')}}" type="text" >
-                </div>
-              </div>
-             </div>
-           </div>
-          </form>
+        <form id="qingchat-doctor-kpi-form" action="" method="get">
+        <div class="row">
+        <div class="col-md-1">
+        <div class="form-group">
+        <label>快速选择:</label>
+        <button type="button" class="btn btn-default btn-primary form-control date" data='15' onclick="kpiObj.quickTime(this)">最近15天</button>
+        </div>
+        </div>
+        <div class="col-md-1">
+        <div class="form-group">
+        <label>&nbsp;</label>
+        <button type="button" class="btn btn-default form-control date" data='30' onclick="kpiObj.quickTime(this)">最近30天</button>
+        </div>
+        </div>
+        <div class="col-md-1">
+        <div class="form-group">
+        <label>&nbsp;</label>
+        <button type="button" class="btn btn-default form-control date" data='180' onclick="kpiObj.quickTime(this)">最近180天</button>
+        </div>
+        </div>
+        <div class="col-md-2">
+        <div class="form-group">
+        <label>日期选择:</label>
+        <div class="input-group">
+        <div class="input-group-addon">
+        <i class="fa fa-calendar"></i>
+        </div>
+        <input id="Insert_Date" name="Stat_Time" class="form-control pull-right" value="{{date('Y-m-d',strtotime('-15 days'))}} ~ {{date('Y-m-d')}}" type="text">
+        </div>
+        </div>
+        </div>
+        <div class="col-md-2">
+        <div class="form-group">
+        <label>&nbsp;</label>
+        <div class="input-group">
+        <button class="btn btn-info margin-r-5" type="button" onclick="kpiObj.search()"><span class="fa fa-search"></span>查询</button>
+        <button class="btn btn-default margin-r-5" type="button" onclick="kpiObj.reset()"><span class="fa fa-undo"></span>重置</button>
+        <button class="btn btn-success" type="submit" name="action" value="excel"><span class="fa fa-file-excel-o"></span>导出</button>
+        </div>
+        </div>
+        </div>
+        </div><!--end .row-->
+        </form>
         </div>
         <!-- /.box-body -->
-        <div class="box-body">
-         <div class="row">
-          <div class="col-md-12">
-             <div id="summaryBox" style="height:100px;">
-               <table class="table table-bordered table-hover"><tbody></tbody></table>
-             </div>
-          </div>
-         </div>
-        <!-- end .row-->
         </div>
-        <!-- /.box-body-->
-      </div>
       <!-- /.box -->
+      <!--########渠道总数以及各渠道总数########-->
+        <div class="box">
+        <div class="box-body">
+        <div class="row">
+          <div class="col-md-1">
+            <div class="description-block">
+            <span class="description-text">问诊总量</span>
+            <hr>
+            <h5 class="description-header" id="Doctor_Num">-</h5>
+            </div>
+          </div>
+          <div class="col-md-1">
+            <div class="description-block">
+            <span class="description-text">新增问诊总量</span>
+            <hr>
+            <h5 class="description-header" id="LeiJi_NewDoctorNum">-</h5>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="description-block">
+            <span class="description-text">总问诊量</span>
+            <hr>
+            <h5 class="description-header" id="Online_ChatNum">-</h5>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="description-block">
+            <span class="description-text">24H回复总量</span>
+            <hr>
+            <h5 class="description-header" id="Online_AnswerNum">-</h5>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="description-block">
+            <span class="description-text">2小时回复总量</span>
+            <hr>
+            <h5 class="description-header" id="TowHourAnswerNum">-</h5>
+            </div>
+          </div>
+           <div class="col-md-2">
+            <div class="description-block">
+            <span class="description-text">首次回复总量</span>
+            <hr>
+            <h5 class="description-header" id="First_AnswerDoctorNum">-</h5>
+            </div>
+          </div>
+          <div class="col-md-1">
+            <div class="description-block">
+            <span class="description-text">2周回复总量</span>
+            <hr>
+            <h5 class="description-header" id="TwoWeek_AnswerDoctorNum">-</h5>
+            </div>
+          </div>
+          <div class="col-md-1">
+            <div class="description-block">
+            <span class="description-text">预约转化总量</span>
+            <hr>
+            <h5 class="description-header" id="ChatToApp_Num">-</h5>
+            </div>
+          </div>
+        </div><!--end .row-->
+        </div><!--end .box-body-->
+        </div><!--end .box-->
+       
        <div class="box">
         <div class="box-header with-border">
     
@@ -175,69 +244,8 @@
           </div>
           <!--end .pointBox-->  
          </div>
-        
-<!--         <div class="col-md-2">
-         <div class="pointBox">
-          <button class="btn btn-default btn-sm btn-block" style="text-align:left;position:relative;">
-             请选择要查看的数据<span class="text-danger">[累计量]</span>
-            <span class="caret text-right" style="position:absolute;right:2.5%;top:45%;"></span>
-          </button>
-          <div class="contentBox">
-             <dl>
-                <dt>
-                <label class="title" for="id_03_01">问诊医生量累计</label>
-                <div class="select"><input id="id_03_01" class="flat-red" type="checkbox"></div>
-                </dt>
-                <dt>
-                <label class="title" for="id_03_02">总问诊量累计</label>
-                <div class="select"><input id="id_03_02" class="flat-red" type="checkbox"></div>
-                </dt>
-                <dt>
-                <label class="title" for="id_03_03">累计问诊预约[转换量]</label>
-                <div class="select"><input id="id_03_03" class="flat-red" type="checkbox"></div>
-                </dt>
-                <dt>
-                <label class="title" for="id_03_04">累计挂号粉丝</label>
-                <div class="select"><input id="id_03_04" class="flat-red" type="checkbox"></div>
-                </dt>
-             </dl>
-          </div>
-          </div>
-         </div>
-
-         <div class="col-md-2">
-         <div class="pointBox">
-          <button class="btn btn-default btn-sm btn-block" style="text-align:left;position:relative;">
-             请选择要查看的数据<span class="text-danger">[新增量]</span>
-            <span class="caret text-right" style="position:absolute;right:2.5%;top:45%;"></span>
-          </button>
-          <div class="contentBox">
-             <dl>
-                <dt>
-                <label class="title" for="id_04_01">当日新增问诊医生量</label>
-                <div class="select"><input id="id_04_01" class="flat-red" type="checkbox"></div>
-                </dt>
-                <dt>
-                <label class="title" for="id_04_02">总问诊量</label>
-                <div class="select"><input id="id_04_02" class="flat-red" type="checkbox"></div>
-                </dt>
-                <dt>
-                <label class="title" for="id_04_03">24H回复咨询量</label>
-                <div class="select"><input id="id_04_03" class="flat-red" type="checkbox"></div>
-                </dt>
-                <dt>
-                <label class="title" for="id_04_04">2小时回复咨询量</label>
-                <div class="select"><input id="id_04_04" class="flat-red" type="checkbox"></div>
-                </dt>
-             </dl>
-          </div>
-          </div> 
-         </div>
-   -->
         </div>
         <!-- end row-->
-         
-
         </div>
         <div class="box-body">
          <div class="row">
@@ -258,7 +266,6 @@
       <div class="box">
         <div class="box-header with-border">
           <h3 class="box-title">数据表格</h3>
-          <button class="btn btn-default" type="button"><span class="fa fa-file-excel-o"></span>导出</button>
         </div>
         <div class="box-body">
           <table class="table table-bordered table-hover" id="qingchat-doctor-kpi-table">
@@ -291,7 +298,6 @@
           </table>
         </div>
         <!-- /.box-body-->
-
        </div>
       <!-- /.box-->
 

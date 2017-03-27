@@ -105,8 +105,8 @@ class Cgi extends Curl
     public function getShopFromCgi($do = 0, $city_no = 0, $shop_no = 0)
     {
         $retArr = [];
-        // $retArr = Cache::get("ShopFromCgi{$do}{$city_no}{$shop_no}");
-        // if (empty($retArr)) {
+        $retArr = Cache::get("ShopFromCgi{$do}{$city_no}{$shop_no}");
+        if (empty($retArr)) {
         $url = self::getCgiUrl('user.queryshop');
         $map = [
             'city_no'    => $city_no ? $city_no : '',
@@ -126,8 +126,8 @@ class Cgi extends Curl
                 $retArr[$v['shop_no']] = $v;
             }, $cgiData['shop_list']);
         }
-        //     Cache::put("ShopFromCgi{$do}{$city_no}{$shop_no}", $retArr, 1000);
-        // }
+            Cache::put("ShopFromCgi{$do}{$city_no}{$shop_no}", $retArr, 1000);
+        }
         return $retArr;
     }
     /**

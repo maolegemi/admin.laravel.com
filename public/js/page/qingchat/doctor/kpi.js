@@ -1,29 +1,26 @@
 define(['echarts', 'datatables'], function(_echarts, datatables) {
     return {
         init: function() {
+                //键盘确定事件
+                $(document).keydown(function(e) {
+                    if (e.keyCode == 13) {
+                        kpiObj.search();
+                        return true;
+                    }
+                });
                 kpiObj = {
                     table: '',
-                    quickSelect:function(obj){
-                      var value = $(obj).val();
-                        var timeRang = '';
-                        if (value == 'week') {
-                            timeRang = GetDateStr(-7) + " ~ " + GetDateStr(0);
-                            $('#qingchat-doctor-kpi-form input[name="Stat_Time"]').val(timeRang);
-                        }
-                        if (value == 'month') {
-                            timeRang = GetMonthStr(-1) + " ~ " + GetMonthStr(0);
-                            $('#qingchat-doctor-kpi-form input[name="Stat_Time"]').val(timeRang);
-                        }
-                        if (value == 'halfYear') {
-                            timeRang = GetMonthStr(-6) + " ~ " + GetMonthStr(0);
-                            $('#qingchat-doctor-kpi-form input[name="Stat_Time"]').val(timeRang);
-                        }
-                        if (this.table) {
-                            this.table.draw();
-                        }
+                    quickTime: function(obj) {
+                        //去掉css//
+                        $("button.date").removeClass('btn-primary');
+                        $(obj).addClass('btn-primary');
+                        var days = $(obj).attr('data');
+                        var dayStr = GetDateStr(0 - days) + " ~ " + GetDateStr(0);
+                        $("#Insert_Date").val(dayStr);
+                        this.search();
                     },
                     searchInit: function() {
-                        setDateRange($("input[name='Stat_Time']"));
+                        setDateRange($("#Insert_Date"));
                     },
                     search: function() {
                         if (this.table) {
@@ -97,10 +94,43 @@ define(['echarts', 'datatables'], function(_echarts, datatables) {
                                 "fnDrawCallback": function(obj) {
                                     //kpiObj.data = obj.json.data;
                                     data = obj.json.data;
-                                    toMakeSummerData(data);
+                                    //toMakeSummerData(data);
+                                    //计算总量
+                                    var sum = {};
+                                    $.each(data, function(k, v) {
+                                        $.each(v, function(kk, vv) {
+                                            if (kk != 'Stat_Time') {
+                                                var value = parseInt(vv);
+                                                if (sum[kk] == undefined) {
+                                                    sum[kk] = value;
+                                                } else {
+                                                    sum[kk] += value;
+                                                }
+                                            }
+                                        });
+                                    });
+                                    $.each(sum, function(k, v) {
+                                        $("#" + k).text(myFunction.format(v,3));
+                                    });
                                     //指标变换
                                     pointSelect($("div.pointBox"), data.reverse());
                                 },
+                                "language": {
+                                    "sLengthMenu": "每页显示 _MENU_ 条记录",
+                                    "sInfo": "　一共 _TOTAL_ 条数据",
+                                    "sInfoFiltered": "(从总记录 _MAX_ 条记录中过滤)",
+                                    "sInfoEmpty": "没有数据",
+                                    "sSearch": "查找 ",
+                                    "sZeroRecords": "没有检索到数据",
+                                    "oPaginate": {
+                                        "sFirst": "首页",
+                                        "sPrevious": "上一页",
+                                        "sNext": "下一页",
+                                        "sLast": "末页"
+                                    }
+                                },
+                                "autoWidth": true,
+                                "retrieve": true,
                             });
                         } //
                     }
@@ -115,7 +145,7 @@ define(['echarts', 'datatables'], function(_echarts, datatables) {
             opens: 'right',
             separator: " ~ ",
             format: "YYYY-MM-DD",
-        },function(){
+        }, function() {
             kpiObj.search();
         });
     }
@@ -238,9 +268,6 @@ define(['echarts', 'datatables'], function(_echarts, datatables) {
     //构造折线图表方法
     function toMakeLine(obj, data) {
         var myChart = echarts.init(obj);
-        myChart.showLoading({
-            text: '数据正在加载...',
-        });
         var option = {
             legend: {
                 show: true,
@@ -282,26 +309,25 @@ define(['echarts', 'datatables'], function(_echarts, datatables) {
     //
     //构造累计总量数据图表
     function toMakeSummerData(data) {
-        var keyArr = [
-            { 'id': 'Doctor_Num', 'total': 0, 'name': '当日问诊医生量(总)' },
-            { 'id': 'LeiJi_NewDoctorNum', 'total': 0, 'name': '当日新增问诊医生量(总)' },
-            { 'id': 'Online_ChatNum', 'total': 0, 'name': '当日总问诊量(总)' },
-            { 'id': 'Online_AnswerNum', 'total': 0, 'name': '24H回复咨询量(总)' },
-            { 'id': 'TowHourAnswerNum', 'total': 0, 'name': '2小时回复咨询量(总)' },
-            { 'id': 'First_AnswerDoctorNum', 'total': 0, 'name': '首次回复医生量(总)' },
-            { 'id': 'TwoWeek_AnswerDoctorNum', 'total': 0, 'name': '两周内有回复医生量(总)' },
-            { 'id': 'ChangeToFans_Num', 'total': 0, 'name': '当日挂号粉丝转换量(总)' },
-            { 'id': 'ChatToApp_Num', 'total': 0, 'name': '当日问诊预约转化量(总)' },
-        ];
-
-        var html = '';
-        $.each(keyArr, function(k, v) {
-            $.each(data, function(key, value) {
-                v['total'] += value[v['id']];
-            });
-            html += "<td><p>&nbsp;</p><p>" + v['name'] + "</p><p>" + v['total'] + "</p></td>";
-        });
-        $("#summaryBox table tbody").html(html);
+        // var keyArr = [
+        //     { 'id': 'Doctor_Num', 'total': 0, 'name': '当日问诊医生量(总)' },
+        //     { 'id': 'LeiJi_NewDoctorNum', 'total': 0, 'name': '当日新增问诊医生量(总)' },
+        //     { 'id': 'Online_ChatNum', 'total': 0, 'name': '当日总问诊量(总)' },
+        //     { 'id': 'Online_AnswerNum', 'total': 0, 'name': '24H回复咨询量(总)' },
+        //     { 'id': 'TowHourAnswerNum', 'total': 0, 'name': '2小时回复咨询量(总)' },
+        //     { 'id': 'First_AnswerDoctorNum', 'total': 0, 'name': '首次回复医生量(总)' },
+        //     { 'id': 'TwoWeek_AnswerDoctorNum', 'total': 0, 'name': '两周内有回复医生量(总)' },
+        //     { 'id': 'ChangeToFans_Num', 'total': 0, 'name': '当日挂号粉丝转换量(总)' },
+        //     { 'id': 'ChatToApp_Num', 'total': 0, 'name': '当日问诊预约转化量(总)' },
+        // ];
+        // var html = '';
+        // $.each(keyArr, function(k, v) {
+        //     $.each(data, function(key, value) {
+        //         v['total'] += value[v['id']];
+        //     });
+        //     html += "<td><p>&nbsp;</p><p>" + v['name'] + "</p><p>" + v['total'] + "</p></td>";
+        // });
+        // $("#summaryBox table tbody").html(html);
     }
     //
     function GetDateStr(day) {

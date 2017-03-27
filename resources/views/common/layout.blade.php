@@ -31,7 +31,7 @@
 <!-- Site wrapper -->
 <div class="wrapper">
   @section('header')
-  <header class="main-header">
+   <header class="main-header">
   @include('common.header')
   </header>
   @show
@@ -45,7 +45,7 @@
   <!-- =============================================== -->
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper"> 
-  @yield('content')  
+   @yield('content')  
   </div>
   <!-- /.content-wrapper -->
   @section('footer')
