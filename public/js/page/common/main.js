@@ -34,9 +34,11 @@ define(['domReady', 'app/common/common', 'app/common/base', 'underscore', 'boots
             //医生数据
             'doctor_doctor_kpi': 'app/doctor/doctor/kpi',
             'doctor_visit': 'app/doctor_visit',
-            //流量分析'
+            //流量分析
             'traffic_traffic_trend': 'app/traffic/traffic/trend',
             'traffic_traffic_source': 'app/traffic/traffic/source',
+            //财务数据
+            'financial_shop_operate':'app/financial/shop/operate',
         };
         // 检查Url
         var url = document.location.pathname;

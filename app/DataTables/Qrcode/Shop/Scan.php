@@ -30,7 +30,7 @@ class Scan extends DataTable
         //构造查询条件
         if (isset($Date) && $Date) {
             if ($this->type == 'monthly') {
-                $obj->where('a.date', strtotime("{$date}-01"));
+                $obj->where('a.Date', "{$Date}-01");
             } else {
                 $obj->where('a.Date', $Date);
             }
@@ -57,7 +57,16 @@ class Scan extends DataTable
     {
         $basic = new Basic();
         $sql   = "a.Date,a.Act_Id,a.Act_Val,a.New_Scan,a.New_Scan_v,a.Scan,a.Scan_v,a.Follow,a.Follow_v,a.Updated_at,b.City_Name,b.Shop_Id,b.Shop_Name";
-        $model = $basic->resetConnection('dbcenter')->resetTable("Dim_Qrcode_Sum_Daily as a")->select(DB::raw($sql));
+        switch ($this->type) {
+            case 'daily':
+                $model = $basic->resetConnection('dbcenter')->resetTable("Dim_Qrcode_Sum_Daily as a")->select(DB::raw($sql));
+                break;
+            case 'weekly':
+                break;
+            case 'monthly':
+                $model = $basic->resetConnection('dbcenter')->resetTable("Rep_qrcode_sum_monthly as a")->select(DB::raw($sql));
+                break;
+        }
         return $this->applyScopes($model);
     }
     //

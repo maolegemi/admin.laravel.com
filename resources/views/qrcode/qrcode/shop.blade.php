@@ -25,8 +25,8 @@
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs" id="shop-nav">
               <li class="active"><a href="#daily" data-toggle="tab"><i class="fa  fa-calendar text-olive margin-r-5"></i>日报表</a></li>
-              <!-- <li><a href="#weekly" data-toggle="tab"><i class="fa fa-calendar-check-o text-red margin-r-5"></i>周报表</a></li>
-              <li><a href="#monthly" data-toggle="tab"><i class="fa fa-calendar-plus-o text-orange margin-r-5"></i>月报表</a></li> -->
+              <!-- <li><a href="#weekly" data-toggle="tab"><i class="fa fa-calendar-check-o text-red margin-r-5"></i>周报表</a></li> -->
+              <li><a href="#monthly" data-toggle="tab"><i class="fa fa-calendar-plus-o text-orange margin-r-5"></i>月报表</a></li>
             </ul>
             <div class="tab-content">
             <div class="active tab-pane" id="daily">
@@ -189,14 +189,14 @@
               <div class="input-group-addon">
               <i class="fa fa-calendar"></i>
               </div>
-              <input data='monthpicker' class="form-control pull-right" name="date" value="{{date('Y-m',strtotime('-4 month'))}}" type="text">
+              <input data='monthpicker' class="form-control pull-right" name="Date" value="{{date('Y-m',strtotime('-1 month'))}}" type="text">
               </div>
               </div>
               </div>
               <div class="col-md-2">
               <div class="form-group">
               <label>城市选择:</label>
-              <select class="form-control" name="CityId" onchange="scanObj.cityChange(this,'monthly')">
+              <select class="form-control" name="City_Id" onchange="scanObj.cityChange(this,'monthly')">
               <option value="">请选择城市</option>
               @foreach($data['init']['csd'] as $k=>$v)
               <option value="{{$v['city_no']}}">{{$v['city_name']}}</option>
@@ -207,7 +207,7 @@
               <div class="col-md-2">
               <div class="form-group">
               <label>门店</label>
-              <select id="shop-monthly" class="form-control" name="ShopId">
+              <select id="shop-monthly" class="form-control" name="Shop_Id">
               <option value="">请选择门店</option>
                 @foreach($data['init']['csd'] as $k=>$v)
                   @foreach($v['shops'] as $kk=>$vv)
@@ -238,13 +238,16 @@
                 <thead>
                 <tr>
                 <th>门店ID</th>
-                <th>月份</th>
-                <th>门店名称</th>
-                <th>扫码新用户人数</th>
-                <th>新用户-变动值</th>
-                <th>累计扫码用户总人数</th>
-                <th>累计 - 变动值</th>
+                <th>区域</th>
+                <th>门店</th>
+                <th>扫码净增次数</th>
+                <th>扫码净增变动值</th>
+                <th>累计扫码次数</th>
+                <th>累计扫码次数变动值</th>
+                <th>累计关注数</th>
+                <th>累计关注数变动值</th>
                 </tr>
+                </thead>
                 </thead>
                 <tbody></tbody>
                 </table>

@@ -304,4 +304,27 @@ $retArr['qingchat']['city']['scan'] = [
     'Today_EffectAsk_Num' => '日有效问题净增量',
     'LeiJi_EffectAsk_Num' => '有效问题累计量',
 ];
+$retArr['financial']['shop']            = [];
+$retArr['financial']['shop']['operate'] = [
+    'City_Name'=>'区域',
+    'Shop_Name'=>'门店名称',
+    'Reg_Num'=>'挂号人次',
+    'Patient_Num'=>'就诊人数',
+    'PaoDan_Num'=>'跑单人次',
+    'Qrcode_Num'=>'扫码人数',
+    'Qrcode_Per'=>'扫码关注占比',
+    'Return_Num'=>'回诊人数',
+    'Return_Per'=>'回诊率',
+    'XieDingFang_Num'=>'协定方处方量',
+    'YinPian_Num'=>'中药饮片处方数量',
+    'WeiXin_Num'=>'微信预约人数',
+    'WeiXin_Per'=>'微信预约率',
+    'Wait_DrugsTime'=>'高峰候药时间(分钟)',
+    'Wait_FeeTime'=>'高峰期收费等候时间',
+    'Wait_PayTime'=>'高峰收费时间',
+    'ShuangYue_Num'=>'爽约人次',
+    'ShuangYue_Per'=>'爽约率',
+    'DaiJian_Num'=>'代煎处方量',
+    'DaiJian_Per'=>'代煎代寄占比',
+];
 return $retArr;

@@ -69,6 +69,7 @@ text-align: center;
         </div>
         </div><!--end /.row-->
         </form>
+        <br/>
         <!--#######表格#######-->
         <div class="row">
          <div class="col-md-12">

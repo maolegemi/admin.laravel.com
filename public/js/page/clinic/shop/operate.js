@@ -372,8 +372,8 @@ define(['echarts', 'datatables'], function(_echarts, datatables) {
                 data: clean.xAxis,
                 axisLabel: {
                     //interval: 0,
-                    rotate: 15, //倾斜度 -90 至 90 默认为0  
-                    margin: 10,
+                    // rotate: 15, //倾斜度 -90 至 90 默认为0  
+                    // margin: 10,
                 },
             }],
             yAxis: clean.yAxis,
